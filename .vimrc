@@ -59,11 +59,19 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
 
+" allows grip use for markdown editing and preview
+let vim_markdown_preview_github=1
+let vim_markdown_preview_browser='Google Chrome'
+let vim_markdown_preview_toggle=2
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Golang
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Have go run goimports on save
 let g:go_fmt_command = "goimports"
+
+" Have meta linter run on save
+let g:go_metalinter_autosave = 1
 
 " Have write happen on build for golang
 set autowrite
@@ -76,6 +84,10 @@ map <leader>a :cclose<CR>
 " Easy go run, go build, and go test
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
+autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+
+" Add camel case for json completion
+let g:go_addtags_transform = "camelcase"
 
 " Syntax highlighting
 let g:go_highlight_types = 1
@@ -84,6 +96,24 @@ let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+
+"Show same identifier
+let g:go_auto_sameids = 1
+
+" Verbose Command Improvements
+" :GoAlternate hotkey to :A
+autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+" :GoAlternate with vertical Split :AV
+autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+" :GoAlternate with regular split :AS
+autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+" :GoAlternate with new tab :AT
+autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+" Auto Load Identifiers
+let g:go_auto_type_info = 1
+set updatetime=100
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -171,7 +201,7 @@ if $COLORTERM == 'gnome-terminal'
 endif
 
 try
-    colorscheme solarized
+    colorscheme molokai
 catch
 endtry
 
@@ -253,7 +283,7 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
-
+" next and previous buffer
 map <leader>l :bnext<cr>
 map <leader>h :bprevious<cr>
 
