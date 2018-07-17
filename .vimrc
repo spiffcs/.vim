@@ -14,6 +14,7 @@
 "
 " Sections:
 "    -> General
+"    -> NerdTree
 "    -> Golang
 "    -> Linting Syntastic
 "    -> VIM user interface
@@ -36,7 +37,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remove python 3 warning from commandline
 if has('python3')
-  silent! python3 1
+silent! python3 1
 endif
 
 " enable pathogen integration
@@ -68,6 +69,12 @@ nmap <leader>w :w!<cr>
 command W w !sudo tee % > /dev/null
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => NerdTree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Golang
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Have go run goimports on save
@@ -78,11 +85,6 @@ let g:go_metalinter_autosave = 1
 
 " Have write happen on build for golang
 set autowrite
-
-" Quickfix Shortcuts
-map <C-n> :cnext<CR>
-map <C-m> :cprevious<CR>
-map <leader>a :cclose<CR>
 
 " Easy go run, go build, and go test
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
