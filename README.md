@@ -1,11 +1,17 @@
-# Using git-submodules to version-control Vim plugins
-If you work across many computers (and even otherwise!), it's a good idea to keep a copy of your setup on the cloud, preferably in a git repository, and clone it on another machine when you need.
-Thus, you should keep the `.vim` directory along with your `.vimrc` version-controlled.
+# .vim
+Go where you go and do what you do, but always with vim
 
-But when you have plugins installed inside `.vim/bundle` (if you use [pathogen](https://github.com/tpope/vim-pathogen)), or inside `.vim/pack` (if you use Vim 8's packages), keeping a copy where you want to be able to update the plugins (individual git repositories), as well as your vim-configuration as a whole, requires you to use git submodules.
+## Using git-submodules to version-control Vim plugins
+If you like to keep regressions out of your setup it is a good idea to keep a copy that's easy to install on something other than your local workspace.
+I like to keep the `.vim` directory, my `.vimrc`, and some special files version-controlled so I can just grab them if I'm moving to a new machine.
+
+Some confusion can come from having plugins installed inside something like `.vim/bundle` (if you use [pathogen](https://github.com/tpope/vim-pathogen)), or inside `.vim/pack` (if you use Vim 8's packages). Are you just going to vc the whole extra code base? 
+
+Actually, a better solution leverages git [submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) so you don't need to push all that extra code around.
 
 ### Creating the repository
-Initialize a git repository inside your `.vim` directory, add everything (including the vimrc), commit and push to a GitHub/BitBucket/GitLab repository:
+Initialize a git repository inside your `.vim` directory, add everything (including the vimrc), and then commit and push to a GitHub/BitBucket/GitLab repository:
+
 ```
 cd ~/.vim
 cp ~/.vimrc vimrc
