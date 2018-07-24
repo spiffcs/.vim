@@ -67,6 +67,8 @@ nmap <leader>w :w!<cr>
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-w>"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => NerdTree
