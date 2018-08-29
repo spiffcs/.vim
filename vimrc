@@ -395,6 +395,11 @@ map <leader>pp :setlocal paste!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Formats malformed json
+function! FormatJSON()
+:%!python -m json.tool
+endfunction
+
 " Returns true if paste mode is enabled
 function! HasPaste()
     if &paste
