@@ -70,6 +70,8 @@ command W w !sudo tee % > /dev/null
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<c-w>"
 
+" enable grip for markdown review
+let vim_markdown_preview_github=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => NerdTree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -135,6 +137,8 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_javascript_eslint_exe='$(npm bin)/eslint'
+let g:prettier#config#bracket_spacing = 'true'
+let g:prettier#config#jsx_bracket_same_line = 'false'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -395,6 +399,11 @@ map <leader>pp :setlocal paste!<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Formats malformed json
+function! FormatJSON()
+:%!python -m json.tool
+endfunction
+
 " Returns true if paste mode is enabled
 function! HasPaste()
     if &paste
