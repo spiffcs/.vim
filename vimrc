@@ -70,6 +70,8 @@ command W w !sudo tee % > /dev/null
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<c-w>"
 
+" enable grip for markdown review
+let vim_markdown_preview_github=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => NerdTree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

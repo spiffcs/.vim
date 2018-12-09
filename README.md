@@ -31,8 +31,8 @@ git submodule init
 ### Installing plugins
 To install plugins (say always-loaded `foo` and optionally-loaded `bar`, located at `https://github.com/manasthakur/foo` and `https://github.com/manasthakur/bar`, respectively) using Vim 8's package feature:
 ```
-git submodule add https://github.com/manasthakur/foo.git pack/plugins/start/foo
-git submodule add https://github.com/manasthakur/bar.git pack/plugins/opt/bar
+git submodule add https://github.com/manasthakur/foo.git bundle/foo
+git submodule add https://github.com/manasthakur/bar.git bundle/bar
 git commit -m "Added submodules."
 ```
 
