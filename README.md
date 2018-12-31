@@ -57,36 +57,23 @@ git commit -m "Added submodules."
     ```
     
 ### Removing plugins
-To remove `foo`:
-```
-cd ~/.vim
-git submodule deinit pack/plugins/start/foo
-git rm -r pack/plugins/start/foo
-rm -r .git/modules/pack/plugins/start/foo
-```
+To remove a submodule you need to:
+- Delete the relevant section from the .gitmodules file.
+- Stage the .gitmodules changes git add .gitmodules
+- Delete the relevant section from .git/config.
+- Run git rm --cached path_to_submodule (no trailing slash).
+- Run rm -rf .git/modules/path_to_submodule (no trailing slash).
+- Commit git commit -m "Removed submodule <name>"
+- Delete the now untracked submodule files rm -rf path_to_submodule
 
 ### Updating plugins
-To update `foo`:
-```
-cd ~/.vim/bundle/<repo>
-git pull origin master
-```
-It is recommended to first `git fetch origin master` a plugin, review changes, and then `git merge`.
+`git submodule update --remote`
 
-To update all the plugins:
-```
-cd ~/.vim
-git submodule foreach git pull origin master
-```
 
-Note that new commits to plugins create uncommitted changes in the main repository.
-After any updates in the submodules, you need to commit the main repository as well:
-```
-cd ~/.vim
-git commit -am "Updated plugins."
-```
+### Installing YCM
+Keeping YCM in-sync is a pain with modules: [YCM](https://github.com/Valloric/YouCompleteMe)
+Make sure you follow the instructions for install if you want to use it on another machine
 
-On another machine, if a `git pull` for the main repository leads to uncommitted changes in the submodules (as a few plugins got updated), perform `git submodule update` to change the recorded state of the submodules.
-
+### Alternatives
 Even though slightly complicated, submodules are a necessary devil when you want to maintain an easily-cloneable `.vim` repository.
 The other option is to _not_ version-control submodules at all by adding a line `pack` in `~/.vim/.gitignore`, and manually add plugins on a new machine.
