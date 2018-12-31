@@ -2,12 +2,11 @@
 Go where you go and do what you do, but always with vim
 
 ## Using git-submodules to version-control Vim plugins
-If you like to keep regressions out of your setup it is a good idea to keep a copy that's easy to install on something other than your local workspace.
-I like to keep the `.vim` directory, my `.vimrc`, and some special files version-controlled so I can just grab them if I'm moving to a new machine.
+If you like to keep regressions out of your vim setup it is a good idea to setup some version control.
 
-Some confusion can come from having plugins installed inside something like `.vim/bundle` (if you use [pathogen](https://github.com/tpope/vim-pathogen)), or inside `.vim/pack` (if you use Vim 8's packages). Are you just going to vc the whole extra code base? 
+Some confusion for this solution can come from having plugins installed inside something like `.vim/bundle` (if you use [pathogen](https://github.com/tpope/vim-pathogen)), or inside `.vim/pack` (if you use Vim 8's packages).
 
-Actually, a better solution leverages git [submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) so you don't need to push all that extra code around.
+One solution leverages git [submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) so you don't need to push all that extra code around.
 
 ### Creating the repository
 Initialize a git repository inside your `.vim` directory, add everything (including the vimrc), and then commit and push to a GitHub/BitBucket/GitLab repository:
@@ -29,10 +28,11 @@ git submodule init
 ```
 
 ### Installing plugins
-To install plugins (say always-loaded `foo` and optionally-loaded `bar`, located at `https://github.com/manasthakur/foo` and `https://github.com/manasthakur/bar`, respectively) using Vim 8's package feature:
+To install plugins (say always-loaded `foo` and optionally-loaded `bar`, located at `https://github.com/spiff90/foo` and `https://github.com/spiff90/bar`, respectively):
+
 ```
-git submodule add https://github.com/manasthakur/foo.git bundle/foo
-git submodule add https://github.com/manasthakur/bar.git bundle/bar
+git submodule add https://github.com/spiff90/foo.git bundle/foo
+git submodule add https://github.com/spiff90/bar.git bundle/bar
 git commit -m "Added submodules."
 ```
 
@@ -80,7 +80,7 @@ git submodule foreach git pull origin master
 ```
 
 Note that new commits to plugins create uncommitted changes in the main repository.
-Thus, after any updates in the submodules, you need to commit the main repository as well:
+After any updates in the submodules, you need to commit the main repository as well:
 ```
 cd ~/.vim
 git commit -am "Updated plugins."
