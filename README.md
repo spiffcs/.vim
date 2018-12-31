@@ -68,7 +68,7 @@ rm -r .git/modules/pack/plugins/start/foo
 ### Updating plugins
 To update `foo`:
 ```
-cd ~/.vim/pack/plugins/start/foo
+cd ~/.vim/bundle/<repo>
 git pull origin master
 ```
 It is recommended to first `git fetch origin master` a plugin, review changes, and then `git merge`.
