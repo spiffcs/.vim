@@ -38,3 +38,6 @@
 	path = bundle/vim-javascript
 	url = https://github.com/pangloss/vim-javascript.git
     branch = master
+[submodule "bundle/vim-terraform"]
+	path = bundle/vim-terraform
+	url = https://github.com/hashivim/vim-terraform.git
