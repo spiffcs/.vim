@@ -8,7 +8,16 @@
 "    -> Plugins
 "    -> General
 "    -> VIM UX
+"    -> Visual mode
+"    -> Text, tab and indent related
+"    -> Tabs, Windows and Buffers
+"    -> Ack searching and cope displaying
 "    -> Colors and Fonts
+"    -> Coc.nvim
+"    -> Golang
+"    -> Python
+"    -> Nerdtree
+"    -> Functions
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -26,12 +35,72 @@ endif
 " - For Neovim: ~/.vim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
+" base stuff
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+
+"ui
 Plug 'morhetz/gruvbox'
+Plug 'preservim/nerdtree'
+Plug 'vim-airline/vim-airline'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'neovim/nvim-lspconfig'
+
+" code
+Plug 'fatih/vim-go', { 'do': 'GoInstallBinaries' }
+Plug 'sebdah/vim-delve'
+Plug 'neoclide/coc-snippets'
+Plug 'rust-lang/rust.vim'
+
+" Search
+Plug 'mileszs/ack.vim'
+
 call plug#end()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Snippets
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """"""""""""""""""""""""""""""""""""""""""""""""""
+" Sets how many lines of history VIM has to remember
+set history=500
+
 " Enable filetype plugins
 filetype plugin on
 filetype indent on
@@ -55,6 +124,127 @@ let mapleader = ","
 nmap <leader>w :w!<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
+" => Coc.nvim
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" If hidden is not set, TextEdit might fail.
+set hidden
+
+" Turn backup off. We have git
+set nobackup
+set nowritebackup
+set nowb
+set noswapfile
+
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap keys for applying codeAction to the current selection.
+nmap <leader>a v<Plug>(coc-codeaction-selected)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+" Note coc#float#scroll works on neovim >= 0.4.3 or vim >= 8.2.0750
+nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+
+" NeoVim-only mapping for visual mode scroll
+" Useful on signatureHelp after jump placeholder of snippet expansion
+if has('nvim')
+  vnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#nvim_scroll(1, 1) : "\<C-f>"
+  vnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#nvim_scroll(0, 1) : "\<C-b>"
+endif
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Golang
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Have go run goimports on save
+let g:gofmt_command = "goimports"
+
+" Have write happen on build for golang
+set autowrite
+
+" jump to the first error automatically
+let g:go_metalinter_autosave = 1
+let g:go_jump_to_error = 1
+
+" Easy go run, go build, and go test
+autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
+
+" Add camel case for json completion
+let g:go_addtags_transform = "camelcase"
+
+" Syntax highlighting
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Tabs, Windows and Buffers
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map <Space> to / (search) and Ctrl<Space> to ? (backwards search)
+map <space> /
+map <c-space> ?
+
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
+
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Close the current buffer
+map <leader> bd :Bclose<cr>:tabclose<cr>gT
+
+" Close all the buffers
+map <leader> ba :bufdo bd<cr> :bufdo bd
+
+" Next and Previous buffer
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+
+" Smar tab moves
+map <C-t>k :tabr<cr>
+map <C-t>j :tabl<cr>
+map <C-t>h :tabp<cr>
+map <C-t>l :tabn<cr>
+""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM UX
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " Set 7 lines to the cursor - when moving vertically using j/k
@@ -67,7 +257,7 @@ set wildmenu
 set ruler
 
 " Height of the command bar
-set cmdheight=1
+set cmdheight=2
 
 " Ignore case when searching, hilight results
 set ignorecase
@@ -75,12 +265,43 @@ set smartcase
 set hlsearch
 set incsearch
 
+" Don't redraw while executing macros (performance)
+set lazyredraw
+
 " For regular expressions turn magic on
 set magic
 
 " Show matching brackets when text indivator is over them
 set showmatch
 set mat=2
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Ack searching and cope displaying
+" 	 Requires ack.vim -
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use the_silver_searcher if possible
+if executable('ag')
+    let g:ackprg = 'ag --vimgrep --smart-case'
+endif
+
+" Open Ack and put the cursor in the right position
+map <leader>g :Ack
+
+" Do :help cope if you are unsure what cope is. It's super useful!
+"
+" When you search with Ack, display your results in cope by doing:
+"   <leader>cc
+"
+" To go to the next search result do:
+"   <leader>n
+"
+" To go to the previous search results do:
+"   <leader>p
+
+map <leader>cc :botright cope<cr>
+map <leader>co ggVGy:tabnew<cr>:set syntax=qf<cr>pgg
+map <leader>n :cn<cr>
+map <leader>p :cp<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -94,10 +315,48 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-try 
+try
     colorscheme gruvbox
 catch
 endtry
 
 " Set utf8 as the standard encoding
 set encoding=utf8
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Nerdtree
+""""""""""""""""""""""""""""""""""""""""""""""""""
+map <C-n> :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use tabs instead of spaces
+set autoindent
+set noexpandtab
+
+" 1 tab == 4 spaces
+set tabstop=4
+set shiftwidth=4
+
+" Linebreak on 500 char
+set lbr
+set tw=500
+
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Rust
+""""""""""""""""""""""""""""""""""""""""""""""""""
+lua << EOF
+require'lspconfig'.rust_analyzer.setup{
+  cmd = { "rust-analyzer" };
+  filetypes = { "rust" };
+  settings = {
+    ["rust-analyzer"] = {}
+  }
+}
+EOF
