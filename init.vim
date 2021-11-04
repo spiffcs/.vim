@@ -38,22 +38,16 @@ call plug#begin('~/.vim/plugged')
 
 " base stuff
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
 
 "ui
 Plug 'morhetz/gruvbox'
 Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'neovim/nvim-lspconfig'
 
 " code
 Plug 'fatih/vim-go', { 'do': 'GoInstallBinaries' }
 Plug 'sebdah/vim-delve'
-Plug 'neoclide/coc-snippets'
 Plug 'rust-lang/rust.vim'
 
 " Search
