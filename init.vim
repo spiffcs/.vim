@@ -11,6 +11,7 @@
 "    -> Tabs, Windows and Buffers
 "    -> Text, tab and indent related
 "    -> Nerdtree
+"    -> vim-ctrlspace
 "    -> Coc.nvim
 "    -> Golang
 "    -> Rust
@@ -40,6 +41,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'morhetz/gruvbox'
 Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'ntpeters/vim-better-whitespace'
 
 " code
@@ -50,6 +52,7 @@ Plug 'rust-lang/rust.vim'
 
 " Search
 Plug 'mileszs/ack.vim'
+Plug 'vim-ctrlspace/vim-ctrlspace'
 
 call plug#end()
 
@@ -83,6 +86,9 @@ let mapleader = ","
 
 " Fast saving
 nmap <leader>w :w!<cr>
+
+" nocompatible for vim-ctrlspace
+set nocompatible
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -138,6 +144,9 @@ try
 catch
 endtry
 
+" Airline Theme
+let g:airline_theme='base16_gruvbox_dark_hard'
+
 " Set utf8 as the standard encoding
 set encoding=utf8
 
@@ -147,9 +156,8 @@ set encoding=utf8
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " => Tabs, Windows and Buffers
 """"""""""""""""""""""""""""""""""""""""""""""""""
-" Map <Space> to / (search) and Ctrl<Space> to ? (backwards search)
+" Map <Space> to / (search)
 map <space> /
-map <c-space> ?
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -206,6 +214,14 @@ set wrap "Wrap lines
 """"""""""""""""""""""""""""""""""""""""""""""""""
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-ctrlspace
+""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:CtrlSpaceDefaultMappingKey = "<C-space> "
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 
