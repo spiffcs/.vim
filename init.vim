@@ -1,25 +1,22 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 " Maintainer:
 "    Christopher Phillips - @spiffcs
-"
 "
 " Sections:
 "    -> Plugins
 "    -> General
 "    -> VIM UX
-"    -> Visual mode
-"    -> Text, tab and indent related
-"    -> Tabs, Windows and Buffers
-"    -> Ack searching and cope displaying
 "    -> Colors and Fonts
+"    -> Tabs, Windows and Buffers
+"    -> Text, tab and indent related
+"    -> Nerdtree
 "    -> Coc.nvim
 "    -> Golang
-"    -> Python
-"    -> Nerdtree
-"    -> Functions
+"    -> Rust
+"    -> Ack searching and cope displaying
 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins
@@ -36,7 +33,7 @@ endif
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 
-" base stuff
+" base
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 "ui
@@ -47,12 +44,17 @@ Plug 'ntpeters/vim-better-whitespace'
 
 " code
 Plug 'fatih/vim-go', { 'do': 'GoInstallBinaries' }
+Plug 'sebdah/vim-delve'
+Plug 'neovim/nvim-lspconfig'
 Plug 'rust-lang/rust.vim'
 
 " Search
 Plug 'mileszs/ack.vim'
 
 call plug#end()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " => General
@@ -83,56 +85,64 @@ let mapleader = ","
 nmap <leader>w :w!<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
-" => Coc.nvim
-""""""""""""""""""""""""""""""""""""""""""""""""""
-" If hidden is not set, TextEdit might fail.
-set hidden
 
-" Turn backup off. We have git
-set nobackup
-set nowritebackup
-set nowb
-set noswapfile
-
-set updatetime=300
-set shortmess+=c
-set signcolumn=yes
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
-" => Golang
+" => VIM UX
 """"""""""""""""""""""""""""""""""""""""""""""""""
-" Have go run goimports on save
-let g:gofmt_command = "goimports"
+" Set 7 lines to the cursor - when moving vertically using j/k
+set so=7
 
-" Have write happen on build for golang
-set autowrite
+" Turn on the Wild menu
+set wildmenu
 
-" jump to the first error automatically
-let g:go_metalinter_autosave = 1
-let g:go_jump_to_error = 1
+" Always show current position
+set ruler
 
-" Easy go run, go build, and go test
-autocmd FileType go nmap <leader>r <Plug>(go-run)
-autocmd FileType go nmap <leader>t <Plug>(go-test)
-autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
+" Height of the command bar
+set cmdheight=2
 
-" Add camel case for json completion
-let g:go_addtags_transform = "camelcase"
+" Ignore case when searching, hilight results
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
 
-" Syntax highlighting
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_build_constraints = 1
+" Don't redraw while executing macros (performance)
+set lazyredraw
+
+" For regular expressions turn magic on
+set magic
+
+" Show matching brackets when text indivator is over them
+set showmatch
+set mat=2
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable syntax highlighting
+syntax enable
+
+set termguicolors
+set background=dark
+if $COLORTERM == 'gnome-terminal'
+    set t_Co=256
+endif
+
+try
+    colorscheme gruvbox
+catch
+endtry
+
+" Set utf8 as the standard encoding
+set encoding=utf8
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " => Tabs, Windows and Buffers
@@ -167,35 +177,145 @@ map <C-t>h :tabp<cr>
 map <C-t>l :tabn<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM UX
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""
-" Set 7 lines to the cursor - when moving vertically using j/k
-set so=7
+" => Text, tab and indent related
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use tabs instead of spaces
+set autoindent
+set noexpandtab
 
-" Turn on the Wild menu
-set wildmenu
+" 1 tab == 4 spaces
+set tabstop=4
+set shiftwidth=4
 
-" Always show current position
-set ruler
+" Linebreak on 500 char
+set lbr
+set tw=500
 
-" Height of the command bar
-set cmdheight=2
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
 
-" Ignore case when searching, hilight results
-set ignorecase
-set smartcase
-set hlsearch
-set incsearch
+""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Don't redraw while executing macros (performance)
-set lazyredraw
 
-" For regular expressions turn magic on
-set magic
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Nerdtree
+""""""""""""""""""""""""""""""""""""""""""""""""""
+map <C-n> :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
 
-" Show matching brackets when text indivator is over them
-set showmatch
-set mat=2
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Coc.nvim
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" If hidden is not set, TextEdit might fail.
+set hidden
+
+" Turn backup off. We have git
+set nobackup
+set nowritebackup
+set nowb
+set noswapfile
+
+set updatetime=100
+set shortmess+=c
+set signcolumn=yes
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap keys for applying codeAction to the current selection.
+nmap <leader>a v<Plug>(coc-codeaction-selected)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+" Note coc#float#scroll works on neovim >= 0.4.3 or vim >= 8.2.0750
+nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+
+" NeoVim-only mapping for visual mode scroll
+" Useful on signatureHelp after jump placeholder of snippet expansion
+if has('nvim')
+  vnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#nvim_scroll(1, 1) : "\<C-f>"
+  vnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#nvim_scroll(0, 1) : "\<C-b>"
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Golang
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Have go run goimports on save
+let g:gofmt_command = "goimports"
+
+" Have write happen on build for golang
+set autowrite
+
+" jump to the first error automatically
+let g:go_metalinter_autosave = 1
+let g:go_jump_to_error = 1
+
+" Easy go run, go build, and go test
+autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
+
+" Add camel case for json completion
+let g:go_addtags_transform = "camelcase"
+
+" Syntax highlighting
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Rust
+""""""""""""""""""""""""""""""""""""""""""""""""""
+lua << EOF
+require'lspconfig'.rust_analyzer.setup{
+  cmd = { "rust-analyzer" };
+  filetypes = { "rust" };
+  settings = {
+    ["rust-analyzer"] = {}
+  }
+}
+EOF
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " => Ack searching and cope displaying
@@ -226,59 +346,3 @@ map <leader>n :cn<cr>
 map <leader>p :cp<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable syntax highlighting
-syntax enable
-
-set termguicolors
-set background=dark
-if $COLORTERM == 'gnome-terminal'
-    set t_Co=256
-endif
-
-try
-    colorscheme gruvbox
-catch
-endtry
-
-" Set utf8 as the standard encoding
-set encoding=utf8
-
-""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Nerdtree
-""""""""""""""""""""""""""""""""""""""""""""""""""
-map <C-n> :NERDTreeToggle<CR>
-let NERDTreeShowHidden=1
-
-""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-""""""""""""""""""""""""""""""""""""""""""""""""""
-" Use tabs instead of spaces
-set autoindent
-set noexpandtab
-
-" 1 tab == 4 spaces
-set tabstop=4
-set shiftwidth=4
-
-" Linebreak on 500 char
-set lbr
-set tw=500
-
-set ai "Auto indent
-set si "Smart indent
-set wrap "Wrap lines
-
-""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Rust
-""""""""""""""""""""""""""""""""""""""""""""""""""
-lua << EOF
-require'lspconfig'.rust_analyzer.setup{
-  cmd = { "rust-analyzer" };
-  filetypes = { "rust" };
-  settings = {
-    ["rust-analyzer"] = {}
-  }
-}
-EOF
