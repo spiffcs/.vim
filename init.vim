@@ -91,6 +91,9 @@ nmap <leader>w :w!<cr>
 " nocompatible for vim-ctrlspace
 set nocompatible
 
+" set mouse support for normal and visual mode
+set mouse=nv
+
 """"""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -280,32 +283,12 @@ if has('nvim-0.4.0') || has('patch-8.2.0750')
   vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
 
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Use <Tab> and <S-Tab> to navigate the completion list:
+inoremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+inoremap <expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<S-Tab>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-y> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
+" To make <cr> select the first completion item and confirm the completion when no item has been selected:
+inoremap <silent><expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -320,7 +303,6 @@ let g:gofmt_command = "goimports"
 set autowrite
 
 " jump to the first error automatically
-let g:go_metalinter_autosave = 1
 let g:go_jump_to_error = 1
 
 " Easy go run, go build, and go test
