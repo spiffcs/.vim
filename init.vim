@@ -46,17 +46,15 @@ Plug 'ntpeters/vim-better-whitespace'
 
 " code
 Plug 'fatih/vim-go', { 'do': 'GoInstallBinaries' }
-Plug 'sebdah/vim-delve'
 Plug 'neovim/nvim-lspconfig'
 Plug 'rust-lang/rust.vim'
-Plug 'honza/vim-snippets'
+Plug 'github/copilot.vim'
 
 " Search
 Plug 'mileszs/ack.vim'
 Plug 'vim-ctrlspace/vim-ctrlspace'
 
 call plug#end()
-
 """"""""""""""""""""""""""""""""""""""""""""""""""
 
 
